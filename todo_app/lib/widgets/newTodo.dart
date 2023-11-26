@@ -20,15 +20,17 @@ class _NewTodoState extends State<NewTodo> {
 
   void _addTodo() {
     final newTask = _newTaskController.text;
-    final newNote = _tagController.text;
+    final newTag = _tagController.text;
     time = DateTime.now().toIso8601String().substring(11, 19);
+    final List<String> tags =
+        newTag.split(',').map((tag) => tag.trim()).toList();
     final newTodo = Todo(
         date: _selectedDate,
         title: newTask,
-        shortNote: newNote,
+        tags: tags,
         time: time,
         isCompleted: false);
-    Provider.of<Todos>(context).addTodo(newTodo);
+    Provider.of<Todos>(context, listen: false).addTodo(newTodo);
     Navigator.of(context).pop();
   }
 
@@ -54,7 +56,7 @@ class _NewTodoState extends State<NewTodo> {
             context: context,
             initialDate: _selectedDate ?? DateTime.now(),
             firstDate: DateTime(2023),
-            lastDate: DateTime.now())
+            lastDate: DateTime(2024))
         .then((pickedDate) {
       if (pickedDate == null) {
         return;
@@ -126,6 +128,13 @@ class _NewTodoState extends State<NewTodo> {
               ),
               InputField('New Task', _newTaskController),
               InputField('Task Tag', _tagController),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.01,
+              ),
+              Text(
+                '*Note : Add tags comma separeted',
+                style: TextStyle(color: Colors.red.withOpacity(0.8)),
+              ),
               Container(
                 height: 60,
                 child: Row(
@@ -154,7 +163,18 @@ class _NewTodoState extends State<NewTodo> {
                 width: MediaQuery.of(context).size.width * 0.4,
                 height: MediaQuery.of(context).size.height * 0.05,
                 child: ElevatedButton(
-                  onPressed: _addTodo,
+                  onPressed: () {
+                    _addTodo();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        backgroundColor: Colors.white,
+                        content: Text(
+                          'Todo Added!',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.black),
+                        )));
+                  },
                   style: const ButtonStyle(
                       backgroundColor: MaterialStatePropertyAll(Colors.grey),
                       shape: MaterialStatePropertyAll(RoundedRectangleBorder(

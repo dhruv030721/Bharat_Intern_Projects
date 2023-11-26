@@ -1,6 +1,6 @@
 class Todo {
   final String title;
-  final String shortNote;
+  final List<String> tags;
   final String time;
   final DateTime? date;
   bool isCompleted;
@@ -9,6 +9,6 @@ class Todo {
     required this.time,
     required this.date,
     required this.isCompleted,
-    required this.shortNote,
+    required this.tags,
   });
 }

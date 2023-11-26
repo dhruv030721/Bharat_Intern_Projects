@@ -16,10 +16,17 @@ class Todos with ChangeNotifier {
 
   bool checkBoxHandler(Todo todo) {
     if (todo.isCompleted) {
+      notifyListeners();
       return todo.isCompleted = false;
     } else {
+      notifyListeners();
       return todo.isCompleted = true;
     }
+  }
+
+  void removeTodo(Todo todo) {
+    todos.remove(todo);
+    notifyListeners();
   }
 
   void selectedDateHandle(DateTime date) {
