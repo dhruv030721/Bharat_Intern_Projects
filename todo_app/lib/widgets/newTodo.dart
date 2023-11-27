@@ -15,8 +15,10 @@ class _NewTodoState extends State<NewTodo> {
   final _newTaskController = TextEditingController();
   final _tagController = TextEditingController();
   bool _isDateChosen = false;
-  var time;
+  bool _isTimeChosen = false;
   DateTime? _selectedDate;
+  TimeOfDay? _seletedTime;
+  var time;
 
   void _addTodo() {
     final newTask = _newTaskController.text;
@@ -28,7 +30,7 @@ class _NewTodoState extends State<NewTodo> {
         date: _selectedDate,
         title: newTask,
         tags: tags,
-        time: time,
+        seletedTime: _formatTimeOfDay(_seletedTime),
         isCompleted: false);
     Provider.of<Todos>(context, listen: false).addTodo(newTodo);
     Navigator.of(context).pop();
@@ -72,7 +74,7 @@ class _NewTodoState extends State<NewTodo> {
     return TextFormField(
       controller: controller,
       keyboardType: TextInputType.name,
-      textCapitalization: TextCapitalization.words,
+      textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: label,
         border: const UnderlineInputBorder(
@@ -84,6 +86,56 @@ class _NewTodoState extends State<NewTodo> {
         labelStyle: const TextStyle(color: Colors.black),
       ),
     );
+  }
+
+  Future<void> _presentTimePicker(BuildContext context) async {
+    final TimeOfDay? newTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.dark().copyWith(
+            colorScheme: const ColorScheme.dark(
+              primary: Colors.white,
+              onSurface: Colors.white,
+            ),
+            primaryColor: Colors.white, // header background color
+            textTheme: TextTheme(
+              bodyLarge: Theme.of(context).textTheme.bodyLarge,
+              bodyMedium: Theme.of(context).textTheme.bodyMedium,
+            ),
+            buttonTheme: const ButtonThemeData(
+              textTheme: ButtonTextTheme.primary,
+              colorScheme: ColorScheme.dark(
+                primary: Colors.white, // button background color
+                onPrimary: Colors.black, // button text color
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+    setState(() {
+      _seletedTime = newTime;
+      _isTimeChosen = true;
+    });
+  }
+
+  String _formatTimeOfDay(TimeOfDay? timeOfDay) {
+    if (timeOfDay != null) {
+      final now = DateTime.now();
+      final selectedTime = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        timeOfDay.hour,
+        timeOfDay.minute,
+      );
+      return DateFormat.jm().format(selectedTime);
+    } else {
+      return 'No time chosen!';
+    }
   }
 
   @override
@@ -127,27 +179,70 @@ class _NewTodoState extends State<NewTodo> {
                 ],
               ),
               InputField('New Task', _newTaskController),
-              InputField('Task Tag', _tagController),
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.01,
-              ),
-              Text(
-                '*Note : Add tags comma separeted',
-                style: TextStyle(color: Colors.red.withOpacity(0.8)),
+                height: MediaQuery.of(context).size.height * 0.025,
               ),
               Container(
-                height: 60,
+                margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).size.height * 0.01),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _isTimeChosen
+                            ? _formatTimeOfDay(_seletedTime)
+                            : 'No Time chosen!',
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ),
+                    ElevatedButton(
+                        style: const ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)))),
+                          backgroundColor: MaterialStatePropertyAll(
+                            Colors.black,
+                          ),
+                        ),
+                        onPressed: () {
+                          _presentTimePicker(context);
+                        },
+                        child: Text(
+                          'Choose Time',
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(color: Colors.grey),
+                        )),
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).size.height * 0.01),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Text(
                         _isDateChosen
                             ? DateFormat().add_yMMMEd().format(_selectedDate!)
-                            : 'No date chosen!',
+                            : 'No Date chosen!',
                         style: const TextStyle(color: Colors.grey),
                       ),
                     ),
-                    TextButton(
+                    ElevatedButton(
+                        style: const ButtonStyle(
+                          shape: MaterialStatePropertyAll(
+                              RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)))),
+                          backgroundColor: MaterialStatePropertyAll(
+                            Colors.black,
+                          ),
+                        ),
                         onPressed: _presentDatePicker,
                         child: Text(
                           'Choose Date',
@@ -158,6 +253,9 @@ class _NewTodoState extends State<NewTodo> {
                         )),
                   ],
                 ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.025,
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.4,

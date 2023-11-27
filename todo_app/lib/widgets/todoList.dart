@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models%20&%20providers/todos.dart';
 
 class TodoList extends StatefulWidget {
-  const TodoList({Key? key});
+  TodoList({Key? key, required this.todoList});
+
+  var todoList;
 
   @override
   State<TodoList> createState() => _TodoListState();
@@ -12,12 +14,11 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
-    var todoList = Provider.of<Todos>(context).todoList;
     Function checkBoxHandler = Provider.of<Todos>(context).checkBoxHandler;
     Function removeTodoHandler = Provider.of<Todos>(context).removeTodo;
     var selectedDate = Provider.of<Todos>(context).getSelectedDate;
     var filteredList =
-        todoList.where((todo) => todo.date == selectedDate).toList();
+        widget.todoList.where((todo) => todo.date == selectedDate).toList();
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
@@ -104,13 +105,6 @@ class _TodoListState extends State<TodoList> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Text(
-                                  'Time : ${filteredList[index].time}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(color: Colors.black),
-                                ),
                                 SizedBox(
                                   height:
                                       MediaQuery.of(context).size.height * 0.01,
@@ -122,7 +116,6 @@ class _TodoListState extends State<TodoList> {
                                       .bodyMedium
                                       ?.copyWith(
                                           color: Colors.black,
-                                          // fontWeight: FontWeight.bold,
                                           fontSize: MediaQuery.of(context)
                                                   .size
                                                   .height *
@@ -132,40 +125,24 @@ class _TodoListState extends State<TodoList> {
                                   height: MediaQuery.of(context).size.height *
                                       0.015,
                                 ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.6,
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    alignment: WrapAlignment.start,
-                                    children: filteredList[index].tags.map(
-                                      (tag) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              right: 5, bottom: 5),
-                                          child: Container(
-                                            decoration: const BoxDecoration(
-                                              color: Colors.black,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(10),
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5),
-                                              child: Text(
-                                                tag,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyMedium,
-                                              ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    ).toList(),
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical:
+                                          MediaQuery.of(context).size.height *
+                                              0.005,
+                                      horizontal:
+                                          MediaQuery.of(context).size.width *
+                                              0.02),
+                                  decoration: const BoxDecoration(
+                                      color: Colors.black,
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(10))),
+                                  child: Text(
+                                    filteredList[index].seletedTime,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(),
                                   ),
                                 ),
                               ],

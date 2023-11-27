@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_app/models%20&%20providers/todos.dart';
 import 'package:todo_app/widgets/dynamicCalendar.dart';
 import 'package:todo_app/widgets/newTodo.dart';
 import 'package:todo_app/widgets/todoList.dart';
@@ -20,6 +22,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var todoList = Provider.of<Todos>(context).todoList;
     var date = DateFormat('EEEE, d MMMM').format(DateTime.now());
 
     return Scaffold(
@@ -58,7 +61,7 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               const DynamicCalendar(),
-              const TodoList(),
+              TodoList(todoList: todoList),
             ],
           ),
         ),

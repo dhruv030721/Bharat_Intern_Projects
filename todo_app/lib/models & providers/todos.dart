@@ -11,7 +11,7 @@ class Todos with ChangeNotifier {
   }
 
   List<Todo> get todoList {
-    return [...todos];
+    return todos;
   }
 
   bool checkBoxHandler(Todo todo) {
