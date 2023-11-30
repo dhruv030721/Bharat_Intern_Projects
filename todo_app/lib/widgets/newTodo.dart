@@ -193,7 +193,7 @@ class _NewTodoState extends State<NewTodo> {
                         _isTimeChosen
                             ? _formatTimeOfDay(_seletedTime)
                             : 'No Time chosen!',
-                        style: const TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.black),
                       ),
                     ),
                     ElevatedButton(
@@ -230,7 +230,7 @@ class _NewTodoState extends State<NewTodo> {
                         _isDateChosen
                             ? DateFormat().add_yMMMEd().format(_selectedDate!)
                             : 'No Date chosen!',
-                        style: const TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.black),
                       ),
                     ),
                     ElevatedButton(

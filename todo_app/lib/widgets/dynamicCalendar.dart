@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo_app/models%20&%20providers/todos.dart';
 
-class DynamicCalendar extends StatelessWidget {
+class DynamicCalendar extends StatefulWidget {
   const DynamicCalendar({super.key});
 
   @override
+  State<DynamicCalendar> createState() => _DynamicCalendarState();
+}
+
+class _DynamicCalendarState extends State<DynamicCalendar> {
+  @override
   Widget build(BuildContext context) {
-    var dateaHandler = Provider.of<Todos>(context).selectedDateHandle;
+    var dateaHandler = Provider.of<Todos>(context, listen: false).dateHandle;
     return EasyDateTimeLine(
       initialDate: DateTime.now(),
       onDateChange: (selectedDate) {

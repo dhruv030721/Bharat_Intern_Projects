@@ -3,9 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo_app/models%20&%20providers/todos.dart';
 
 class TodoList extends StatefulWidget {
-  TodoList({Key? key, required this.todoList});
-
-  var todoList;
+  TodoList({Key? key});
 
   @override
   State<TodoList> createState() => _TodoListState();
@@ -14,17 +12,19 @@ class TodoList extends StatefulWidget {
 class _TodoListState extends State<TodoList> {
   @override
   Widget build(BuildContext context) {
+    var todoList = Provider.of<Todos>(context).TodoList;
     Function checkBoxHandler = Provider.of<Todos>(context).checkBoxHandler;
     Function removeTodoHandler = Provider.of<Todos>(context).removeTodo;
     var selectedDate = Provider.of<Todos>(context).getSelectedDate;
     var filteredList =
-        widget.todoList.where((todo) => todo.date == selectedDate).toList();
+        todoList.where((todo) => todo.date == selectedDate).toList();
 
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.9,
-      height: MediaQuery.of(context).size.height * 0.5,
+      height: MediaQuery.of(context).size.height * 0.6,
       child: filteredList.isEmpty
-          ? Center(
+          ? Align(
+              alignment: Alignment.center,
               child: Text(
                 'No Todos!',
                 style: Theme.of(context).textTheme.bodyLarge,

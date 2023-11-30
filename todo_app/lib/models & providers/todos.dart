@@ -10,8 +10,8 @@ class Todos with ChangeNotifier {
     notifyListeners();
   }
 
-  List<Todo> get todoList {
-    return todos;
+  List<Todo> get TodoList {
+    return [...todos];
   }
 
   bool checkBoxHandler(Todo todo) {
@@ -22,6 +22,11 @@ class Todos with ChangeNotifier {
       notifyListeners();
       return todo.isCompleted = true;
     }
+  }
+
+  void dateHandle(DateTime? date) {
+    selectedDate = date;
+    notifyListeners();
   }
 
   void removeTodo(Todo todo) {
