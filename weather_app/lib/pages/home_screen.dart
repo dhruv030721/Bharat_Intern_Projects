@@ -125,7 +125,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: size.height * 0.1,
                 ),
                 // city name
-                Text(_weather?.cityName ?? "loading city..."),
+                _weather != null ? Text(_weather!.cityName) : Container(),
                 SizedBox(
                   height: size.height * 0.1,
                 ),
@@ -135,14 +135,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: size.height * 0.2,
                 ),
-                Column(
-                  children: [
-                    // tempreture
-                    Text('${_weather?.tempreature.round()}°C'),
-                    // Weather Condition
-                    Text('${_weather?.mainCondition}'),
-                  ],
-                )
+                _weather != null
+                    ? Column(
+                        children: [
+                          // tempreture
+                          Text('${_weather?.tempreature.round()}°C'),
+                          // Weather Condition
+                          Text('${_weather?.mainCondition}'),
+                        ],
+                      )
+                    : Container(),
               ],
             ),
           ),
